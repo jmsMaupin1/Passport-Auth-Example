@@ -8,7 +8,7 @@ module.exports = (app, passport) => {
 
 	// Login
 	app.get('/login', (req, res) => {
-		res.render('login.ejs', { message: res.flash('loginMessagae') });
+		res.render('login.ejs', { message: req.flash('loginMessagae') });
 	});
 
 	// Process Login Form
@@ -16,7 +16,7 @@ module.exports = (app, passport) => {
 
 	// Signup
 	app.get('/signup', (req, res) => {
-		res.render('signup.ejs', { message: res.flash('signupMessage') });
+		res.render('signup.ejs', { message: req.flash('signupMessage') });
 	})
 
 	// Process Signup form

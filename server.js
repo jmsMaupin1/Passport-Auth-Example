@@ -25,6 +25,7 @@ app.use(bodyParser());
 app.use(session({ secret: 'd003994a-3b03-4909-8e61-13b9534c8d85'})); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
+app.use(flash()); // use connect-flash for flash messages stored in session
 
 // Configuration
 mongoose.connect(configDB.url);
@@ -39,5 +40,3 @@ app.listen(port, (err, res) => {
 
 	console.log(`Listening on port: ${port}`)
 });
-
-app.use(flash()); // use connect-flash for flash messages stored in session
