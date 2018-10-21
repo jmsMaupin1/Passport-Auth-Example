@@ -6,13 +6,6 @@ module.exports = (app, passport) => {
 		res.render('index.ejs')
 	});
 
-	// Login
-	app.get('/login', (req, res) => {
-		res.render('login.ejs', { message: req.flash('loginMessagae') });
-	});
-
-	// Process Login Form
-	// app.post('/login', pass port stuff);
 
 	// Signup
 	app.get('/signup', (req, res) => {
@@ -20,11 +13,27 @@ module.exports = (app, passport) => {
 	})
 
 	// Process Signup form
-	// app.post('/signup', pass port stuff)
+	app.post('/signup', passport.authenticate('local-signup', {
+		successRedirect: '/profile', // redirect to the secure profile section
+		failureRedirect: '/signup',  // redirect back to the signup page if there is an error
+		failureFlash: true           // allow flash messages
+	}))
+
+	// Login
+	app.get('/login', (req, res) => {
+		res.render('login.ejs', { message: req.flash('loginMessagae') });
+	});
+
+	// Process Login Form
+	app.post('/login', passport.authenticate('local-login', {
+		successRedirect: '/profile',
+		failureRedirect: '/login',
+		failureFlash: true
+	}));
 
 	// Profile - Protected, require authentication
 	app.get('/profile', isLoggedIn, (req, res) => {
-		res.sendFile('profile.ejs', { user: req.user });
+		res.render('profile.ejs', { user: req.user });
 	})
 
 	// Logout

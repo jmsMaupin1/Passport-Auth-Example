@@ -23,7 +23,7 @@ module.exports = (passport) => {
     	passwordField: 'password',
     	passReqToCallback: true
     }, (req, email, password, done) => {
-    	process.tick(() => {
+    	process.nextTicks(() => {
     		// Find a user whose email is the same as the forms email
     		User.findOne({ 'local.email' : email }, (err, user) => {
     			if (err) return done(err);
@@ -37,11 +37,32 @@ module.exports = (passport) => {
 				newUser.local.password = newUser.generateHash(password);
 
 				// Save user
-				newUser.save((err) => {
+				newUser.save( (err) => {
 					if (err) throw err;
 					return done(null, newUser);
-				}
+				})
     		})
+    	})
+    }));
+
+    passport.use('local-login', new LocalStrategy({
+    	usernameField: 'email',
+    	passwordField: 'password',
+    	passReqToCallback: true
+    }, (req, email, password, done) => {
+    	User.findOne( { 'local.email' : email }, (err, user) => {
+    		if (err) throw err;
+
+    		// User not found
+    		if (!user) 
+    			return done(null, false, req.flash('loginMessage', 'no user found'));
+
+    		// Password is invalid
+    		if (!user.validPassword(password))
+    			return done(null, false, req.flash('loginMessage', 'Oops! wrong password'));
+
+    		// Login success
+    		return done(null, user);
     	})
     }))
 }

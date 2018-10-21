@@ -29,7 +29,7 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 
 // Configuration
 mongoose.connect(configDB.url);
-// require('./config/passport')(passport);
+require('./config/passport')(passport);
 
 // Routes
 require('./app/routes.js')(app, passport);
